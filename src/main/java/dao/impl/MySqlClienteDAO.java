@@ -25,11 +25,13 @@ public class MySqlClienteDAO implements ClienteDAO{
 		try {
 			conn = MySqlDBConexion.getConexion();
 			
-			String sql = "insert into Cliente values(null,?,?,?)";
+			String sql = "insert into cliente values(null,?,?,?,?,?)";
 			pstm = conn.prepareStatement(sql);
 			pstm.setString(1, obj.getNombre());
 			pstm.setString(2, obj.getDni());
-			pstm.setInt(3, obj.getCategoria().getIdCategoria());
+			pstm.setTimestamp(3, obj.getFechaRegistro());
+			pstm.setInt(4, obj.getEstado());
+			pstm.setInt(5, obj.getCategoria().getIdCategoria());
 			
 			log.info(">>>> " + pstm);
 
@@ -46,7 +48,6 @@ public class MySqlClienteDAO implements ClienteDAO{
 		return salida;
 	}
 
-	@Override
 	public List<Cliente> listaCliente(String filtro) {
 		List<Cliente> lista = new ArrayList<Cliente>();
 		Connection conn = null;
@@ -71,10 +72,12 @@ public class MySqlClienteDAO implements ClienteDAO{
 				objCliente.setIdCliente(rs.getInt(1));
 				objCliente.setNombre(rs.getString(2));
 				objCliente.setDni(rs.getString(3));
+				objCliente.setFechaRegistro(rs.getTimestamp(4));
+				objCliente.setEstado(rs.getInt(5));
 				
 				objCategoria = new Categoria();
-				objCategoria.setIdCategoria(rs.getInt(4));
-				objCategoria.setNombre(rs.getString(5));
+				objCategoria.setIdCategoria(rs.getInt(6));
+				objCategoria.setNombre(rs.getString(7));
 				objCliente.setCategoria(objCategoria);
 				
 				lista.add(objCliente);
